@@ -8,6 +8,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import * as readline from 'readline';
 import * as AWS from 'aws-sdk';
 const S3 = new AWS.S3();
 
@@ -26,8 +27,8 @@ const CONFIG_PATH = `${path.join(process.env.HOME, '.travis-env.json')}`;
 if (fs.existsSync(CONFIG_PATH)) {
   console.log('Loading config');
 } else {
-  console.error('No config file detected, exiting');
-  process.exit(0);
+  console.error('No config file detected...');
+  createConfig();
 }
 
 require('yargs')
@@ -37,6 +38,7 @@ require('yargs')
     (yargs: any): void => {},
     (argv: any) => {
       // Run command
+      createConfig();
     }
   )
   .command(
@@ -56,3 +58,28 @@ require('yargs')
     alias: 'v',
     default: false,
   }).argv;
+
+function createConfig(): void {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  rl.question('Enter your S3 bucket:\n', (answer) => {
+    S3.getObject({
+      Bucket: answer,
+      Key: '.travis-env-remote.json'
+    }, (err, data) => {
+      if (err.code === 'NoSuchKey') {
+        // No key but the bucket exists
+        console.error('Error retrieving S3 content', err);
+        process.exit(1);
+      } else if (err.code === 'NoSuchBucket') {
+        console.error('Bucket not found', err);
+        process.exit(1);
+      } else {
+        console.error('Unexpected S3 error', err);
+        process.exit(1);
+      }
+    });
+  });
+}
