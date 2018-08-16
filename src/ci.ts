@@ -21,7 +21,7 @@ export default class CI {
     let output = '';
     Object.keys(config).forEach((key) => {
       const value = config[key];
-      output = output.concat(`\n${value}=${key}`);
+      output = output.concat(`\nexport ${value}=${key}`);
     });
     process.stdout.write(output);
     process.exit(0);
