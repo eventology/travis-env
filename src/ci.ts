@@ -7,7 +7,7 @@ const S3: any = Bluebird.promisifyAll(new AWS.S3());
 // Assume our credentials are good
 
 export default class CI {
-  static async loadEnvVars() {
+  static async loadEnvVars(additionalVars: any = {}) {
     // Assert existence of bucket
     if (!process.env.T_ENV_BUCKET) {
       console.error('No T_ENV_BUCKET specified in ENV');
@@ -19,7 +19,7 @@ export default class CI {
     });
     const config = JSON.parse(response.Body.toString());
     let output = '';
-    Object.keys(config).forEach((key) => {
+    Object.keys({ ...additionalVars, ...config }).forEach((key) => {
       const value = config[key];
       output = output.concat(`\nexport ${key}=${value}`);
     });

@@ -8,9 +8,8 @@
 
 // Parse JSON from the env var T_ENV_CONFIG and assign onto shared process env
 // Put any AWS config in that env var
-if (process.env.T_ENV_CONFIG) {
-  Object.assign(process.env, JSON.parse(process.env.T_ENV_CONFIG));
-}
+const T_ENV_VARS = process.env.T_ENV_CONFIG ? JSON.parse(process.env.T_ENV_CONFIG) : {};
+Object.assign(process.env, T_ENV_VARS);
 
 import * as fs from 'fs';
 import * as readline from 'readline';
@@ -31,7 +30,7 @@ const S3: any = Bluebird.promisifyAll(new AWS.S3());
 
   if (process.env.CI) {
     // We are running in CI, simply output the env vars
-    await CI.loadEnvVars();
+    await CI.loadEnvVars(T_ENV_VARS);
     process.exit(0);
   }
 
