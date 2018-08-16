@@ -1,0 +1,4 @@
+!build/
+
+# Ignore top level json
+*travis*.json
