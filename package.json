@@ -2,6 +2,10 @@
   "name": "travis-env",
   "version": "0.0.2",
   "description": "A tool for provisioning secrets into travis build environments",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eventology/travis-env.git"
+  },
   "scripts": {
     "lint": "eslint *.js",
     "build": "tsc --build tsconfig.json",
