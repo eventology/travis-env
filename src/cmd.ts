@@ -6,6 +6,12 @@
  *
  **/
 
+// Parse JSON from the env var T_ENV_CONFIG and assign onto shared process env
+// Put any AWS config in that env var
+if (process.env.T_ENV_CONFIG) {
+  Object.assign(process.env, JSON.parse(process.env.T_ENV_CONFIG));
+}
+
 import * as fs from 'fs';
 import * as readline from 'readline';
 import * as AWS from 'aws-sdk';
@@ -16,12 +22,13 @@ import { CONFIG_PATH, CI_CONFIG_KEY } from './constants';
 
 const S3: any = Bluebird.promisifyAll(new AWS.S3());
 
-if (!AWS.config.credentials.accessKeyId) {
-  console.error('No aws credentials have been detected');
-  process.exit(1);
-}
-
 (async () => {
+
+  if (!AWS.config.credentials.accessKeyId) {
+    console.error('No aws credentials have been detected');
+    process.exit(1);
+  }
+
   if (process.env.CI) {
     // We are running in CI, simply output the env vars
     await CI.loadEnvVars();
