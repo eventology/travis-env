@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint *.js",
     "build": "tsc --build tsconfig.json",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
