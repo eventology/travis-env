@@ -1,0 +1,25 @@
+{
+  "name": "travis-env",
+  "version": "0.0.1",
+  "description": "A tool for provisioning secrets into travis build environments",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "travis-env": "cmd.js"
+  },
+  "keywords": [
+    "travis",
+    "ci",
+    "github",
+    "auto",
+    "environment",
+    "shell",
+    "helper"
+  ],
+  "author": "Chance Hudson",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.294.0"
+  }
+}
