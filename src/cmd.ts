@@ -22,7 +22,7 @@ if (!AWS.config.credentials.accessKeyId) {
 }
 
 (async () => {
-  if (!process.env.CI) {
+  if (process.env.CI) {
     // We are running in CI, simply output the env vars
     await CI.loadEnvVars();
     process.exit(0);
