@@ -17,9 +17,9 @@ export default class CI {
       Bucket: process.env.T_ENV_BUCKET,
       Key: CI_CONFIG_KEY
     });
-    const config = JSON.parse(response.Body.toString());
+    const config = { ...additionalVars, ...JSON.parse(response.Body.toString()) };
     let output = '';
-    Object.keys({ ...additionalVars, ...config }).forEach((key) => {
+    Object.keys(config).forEach((key) => {
       const value = config[key];
       output = output.concat(`\nexport ${key}=${value}`);
     });
