@@ -6,9 +6,9 @@
  *
  **/
 
-const path = require('path');
-const fs = require('fs');
-const AWS = require('aws-sdk');
+import * as path from 'path';
+import * as fs from 'fs';
+import * as AWS from 'aws-sdk';
 const S3 = new AWS.S3();
 
 if (!AWS.config.credentials.accessKeyId) {
@@ -34,20 +34,22 @@ require('yargs')
   .command(
     'config',
     'Configure your travis-env settings',
-    (yargs) => undefined,
-    (argv) => {}
+    (yargs: any): void => {},
+    (argv: any) => {
+      // Run command
+    }
   )
   .command(
     'add (repo)',
     'Add a repo to the auth list',
-    (yargs) => {
+    (yargs: any) => {
       yargs.positional('repo', {
         describe: 'Repo to generate keys for',
       });
     },
-    (argv) => {
+    (argv: any) => {
       if (argv.verbose) console.info(`start server on :${argv.port}`);
-      serve(argv.port);
+      // Run command
     }
   )
   .option('verbose', {
