@@ -26,7 +26,8 @@ Travis repo config should have a secret structured like the following:
 {
   "AWS_ACCESS_KEY_ID": "XXXXXXXXXXXXX",
   "AWS_SECRET_ACCESS_KEY": "XXXXXXXXXXXXXXX",
-  "T_ENV_BUCKET":"YOUR_BUCKET_NAME"}
+  "T_ENV_BUCKET":"YOUR_BUCKET_NAME"
+}
 ```
 
 The config above can be passed to authenticate with AWS and supply a bucket name. A file named `.travis-env-ci.json` will be downloaded, parsed, and output to `stdout` formatted in such a way that the shell can read it (via `eval` or `source`).
