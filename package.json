@@ -3,10 +3,16 @@
   "version": "0.0.1",
   "description": "A tool for provisioning secrets into travis build environments",
   "scripts": {
+    "lint": "eslint *.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
     "travis-env": "cmd.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@eventology/eslint-config"
+    ]
   },
   "keywords": [
     "travis",
@@ -20,6 +26,11 @@
   "author": "Chance Hudson",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.294.0"
+    "aws-sdk": "^2.294.0",
+    "yargs": "^12.0.1"
+  },
+  "devDependencies": {
+    "@eventology/eslint-config": "0.0.16",
+    "eslint": "^5.3.0"
   }
 }
