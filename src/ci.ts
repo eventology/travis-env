@@ -13,11 +13,16 @@ export default class CI {
       console.error('No T_ENV_BUCKET specified in ENV');
       process.exit(1);
     }
-    const object = await S3.getObjectAsync({
+    const config = await S3.getObjectAsync({
       Bucket: process.env.T_ENV_BUCKET,
       Key: CI_CONFIG_KEY || process.env.CI_CONFIG_KEY
     });
-    console.log(object);
+    const output = '';
+    Object.keys(config).forEach((value, key) => {
+      output.concat(`\n${value}=${key}`);
+    });
+    process.stdout.write(output);
+    process.exit(0);
   }
 
   static async createEmptyConfig(bucket: string) {
