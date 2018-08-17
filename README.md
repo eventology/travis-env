@@ -56,8 +56,8 @@ In a CI environment the `travis-env` executable will do the following:
 - Parse `T_ENV_CONFIG` and apply it to the current process
 - Look for an env variable called `T_ENV_BUCKET`
 - Download `.travis-env-ci.json` from `T_ENV_BUCKET`
-- Parse the JSON file downloaded and output a list of env vars to stdout formatted as the following
-- `T_ENV_CONFIG` variables will also be output
+- Parse the JSON file downloaded and do `Object.assign(T_ENV_CONFIG, parsed)`
+- Output a list of env vars to stdout formatted for consumption by the shell
 
 ```sh
 DOCKER_USERNAME=username
