@@ -8,19 +8,29 @@ Travis doesn't support organization wide configurations for environment variable
 
 More discussion [in this issue](https://github.com/travis-ci/travis-ci/issues/2069).
 
-## Use
+## Structure
 
-CLI is simple right now, run in an authenticate aws environment.
+There are 2 main components to this system.
 
-Put a file named `.travis-env-ci.json` in an S3 bucket and then run the following command in a CI environment:
+### `.travis-env-ci.json`
 
+A JSON file storing a key value map of environment variables to be stored in memory. This file is stored in an AWS S3 bucket and accessed via the AWS CLI and SDK. An example looks like the following:
+
+```json
+{
+  "DOCKER_USERNAME": "username",
+  "DOCKER_PASSWORD": "password",
+  "OTHER_VARIABLE": "value"
+}
 ```
-npm i -g travis-env && eval "$(travis-env)"
-```
 
-This will install and run the `travis-env` package and read the output into local environment variables. `travis-env` will look for a local variable called `T_ENV_CONFIG` and parse the value as a JSON string and assign it onto the local env. Use this to pass multiple config flags at once.
+### `T_ENV_CONFIG`
 
-Travis repo config should have a secret structured like the following:
+This is an environment variable set on each travis repo. This variable should be a JSON string of key/value pairs to be read into memory initially.
+
+The strategy is store AWS credentials here along with the bucket name containing the `.travis-env-ci.json` file. This is just enough information to facilitate download, but can be easily invalidated in the event of a data breach.
+
+An example config might look like the following:
 
 ```json
 {
@@ -30,13 +40,47 @@ Travis repo config should have a secret structured like the following:
 }
 ```
 
-The config above can be passed to authenticate with AWS and supply a bucket name. A file named `.travis-env-ci.json` will be downloaded, parsed, and output to `stdout` formatted in such a way that the shell can read it (via `eval` or `source`).
-
-Make sure that when it's supplied as an environment variable it's normalized for shell input.
+Make sure that when it's supplied as an environment variable it's normalized for the shell:
 
 ```sh
-T_ENV_CONFIG='{"AWS_ACCESS_KEY_ID": "XXXXXXXXXXXXX","AWS_SECRET_ACCESS_KEY": "XXXXXXXXXXXXXXX","T_ENV_BUCKET":"YOUR_BUCKET_NAME"}'
+'{"AWS_ACCESS_KEY_ID": "XXXXXXXXXXXXX","AWS_SECRET_ACCESS_KEY": "XXXXXXXXXXXXXXX","T_ENV_BUCKET":"YOUR_BUCKET_NAME"}'
 ```
+
+## Use
+
+### CI Environment
+
+In a CI environment the `travis-env` executable will do the following:
+
+- Look for an env variable called `T_ENV_CONFIG`
+- Parse `T_ENV_CONFIG` and apply it to the current process
+- Look for an env variable called `T_ENV_BUCKET`
+- Download `.travis-env-ci.json` from `T_ENV_BUCKET`
+- Parse the JSON file downloaded and output a list of env vars to stdout formatted as the following
+- `T_ENV_CONFIG` variables will also be output
+
+```sh
+DOCKER_USERNAME=username
+DOCKER_PASSWORD=password
+OTHER_VARIABLE=value
+AWS_ACCESS_KEY_ID=XXXXXXXXXXXXX
+AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXX
+T_ENV_BUCKET=YOUR_BUCKET_NAME
+```
+
+This can be used to set environment variables in the shell like so:
+
+```sh
+npm i -g travis-env && eval "$(travis-env)"
+```
+
+### Non-CI Environment
+
+In a non-ci environemnt the `travis-env` executable will ask for a bucket name and generate an empty `.travis-env-ci.json` file and put it in the root of the bucket. The config is stored in your home directory.
+
+#### TODO
+
+Make editing the `.travis-env-ci.json` easier, expand cli functionality.
 
 ## License
 
