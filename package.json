@@ -1,6 +1,6 @@
 {
   "name": "travis-env",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A tool for provisioning secrets into travis build environments",
   "repository": {
     "type": "git",
