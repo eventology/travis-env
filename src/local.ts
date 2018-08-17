@@ -10,7 +10,7 @@ export default class Local {
         version: 1
       }), (err) => {
         if (err) {
-          rj(err);
+          return rj(err);
         }
         rs();
       })
