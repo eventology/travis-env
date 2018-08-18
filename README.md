@@ -78,6 +78,14 @@ npm i -g travis-env && eval "$(travis-env)"
 
 In a non-ci environemnt the `travis-env` executable will ask for a bucket name and generate an empty `.travis-env-ci.json` file and put it in the root of the bucket. The config is stored in your home directory.
 
+## Example projects
+
+These are a few projects with `.travis.yml` files that use this tool.
+
+- [`eventology/alpine-node`](https://github.com/eventology/alpine-node) - [Build link](https://travis-ci.org/eventology/alpine-node)
+- [`eventology/alpine-static`](https://github.com/eventology/alpine-static) - [Build link](https://travis-ci.org/eventology/alpine-static)
+- [`eventology/alpine-vips`](https://github.com/eventology/alpine-vips) - [Build link](https://travis-ci.org/eventology/alpine-vips)
+
 #### TODO
 
 Make editing the `.travis-env-ci.json` easier, expand cli functionality.
