@@ -71,8 +71,18 @@ T_ENV_BUCKET=YOUR_BUCKET_NAME
 This can be used to set environment variables in the shell like so:
 
 ```sh
+eval "$(npx travis-env)"
+```
+
+<details><summary>Non-npx implementation</summary>
+  <p>
+    
+```sh
 npm i -g travis-env && eval "$(travis-env)"
 ```
+
+  </p>
+</details>
 
 ### Non-CI Environment
 
