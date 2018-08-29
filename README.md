@@ -71,12 +71,30 @@ T_ENV_BUCKET=YOUR_BUCKET_NAME
 This can be used to set environment variables in the shell like so:
 
 ```sh
+eval "$(npx travis-env)"
+```
+
+<details><summary>Non-npx implementation</summary>
+  <p>
+    
+```sh
 npm i -g travis-env && eval "$(travis-env)"
 ```
+
+  </p>
+</details>
 
 ### Non-CI Environment
 
 In a non-ci environemnt the `travis-env` executable will ask for a bucket name and generate an empty `.travis-env-ci.json` file and put it in the root of the bucket. The config is stored in your home directory.
+
+## Example projects
+
+These are a few projects with `.travis.yml` files that use this tool.
+
+- [`eventology/alpine-node`](https://github.com/eventology/alpine-node) - [Build link](https://travis-ci.org/eventology/alpine-node)
+- [`eventology/alpine-static`](https://github.com/eventology/alpine-static) - [Build link](https://travis-ci.org/eventology/alpine-static)
+- [`eventology/alpine-vips`](https://github.com/eventology/alpine-vips) - [Build link](https://travis-ci.org/eventology/alpine-vips)
 
 #### TODO
 
