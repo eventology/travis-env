@@ -8,7 +8,9 @@
 
 // Parse JSON from the env var T_ENV_CONFIG and assign onto shared process env
 // Put any AWS config in that env var
-const T_ENV_VARS = process.env.T_ENV_CONFIG ? JSON.parse(process.env.T_ENV_CONFIG) : {};
+const T_ENV_VARS = process.env.T_ENV_CONFIG
+  ? JSON.parse(process.env.T_ENV_CONFIG)
+  : {};
 Object.assign(process.env, T_ENV_VARS);
 
 import * as fs from 'fs';
@@ -16,13 +18,11 @@ import * as readline from 'readline';
 import * as AWS from 'aws-sdk';
 import CI from './ci';
 import Local from './local';
-import Bluebird from 'bluebird';
 import { CONFIG_PATH, CI_CONFIG_KEY } from './constants';
 
-const S3: any = Bluebird.promisifyAll(new AWS.S3());
+const S3: any = new AWS.S3();
 
 (async () => {
-
   if (!AWS.config.credentials.accessKeyId) {
     console.error('No aws credentials have been detected');
     process.exit(1);
@@ -56,7 +56,7 @@ const S3: any = Bluebird.promisifyAll(new AWS.S3());
       'Add a repo to the auth list',
       (yargs: any) => {
         yargs.positional('repo', {
-          describe: 'Repo to generate keys for',
+          describe: 'Repo to generate keys for'
         });
       },
       (argv: any) => {
@@ -66,7 +66,7 @@ const S3: any = Bluebird.promisifyAll(new AWS.S3());
     )
     .option('verbose', {
       alias: 'v',
-      default: false,
+      default: false
     }).argv;
 
   async function createConfig(): Promise<void> {
@@ -74,12 +74,19 @@ const S3: any = Bluebird.promisifyAll(new AWS.S3());
       input: process.stdin,
       output: process.stdout
     });
-    const question = Bluebird.promisify((question: string, callback: (err?: any, answer?: string) => void) => {
-      rl.question(question, (_answer) => callback(null, _answer));
-    });
+    const question = async (question: string): Promise<any> => {
+      new Promise(async (res, rej) => {
+        try {
+          return rl.question(question, _answer => res(_answer));
+        } catch (error) {
+          rej(error);
+        }
+      });
+    };
+
     const bucket = await question('Enter your S3 bucket:\n');
     try {
-      const object = await S3.getObjectAsync({
+      await S3.getObjectAsync({
         Bucket: bucket,
         Key: CI_CONFIG_KEY
       });

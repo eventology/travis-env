@@ -1,8 +1,6 @@
-
 import * as AWS from 'aws-sdk';
 import { CI_CONFIG_KEY } from './constants';
-import Bluebird from 'bluebird';
-const S3: any = Bluebird.promisifyAll(new AWS.S3());
+const S3: any = new AWS.S3();
 
 // Assume our credentials are good
 
@@ -13,13 +11,16 @@ export default class CI {
       console.error('No T_ENV_BUCKET specified in ENV');
       process.exit(1);
     }
-    const response = await S3.getObjectAsync({
+    const response = await S3.getObject({
       Bucket: process.env.T_ENV_BUCKET,
       Key: CI_CONFIG_KEY
-    });
-    const config = { ...additionalVars, ...JSON.parse(response.Body.toString()) };
+    }).promise();
+    const config = {
+      ...additionalVars,
+      ...JSON.parse(response.Body.toString())
+    };
     let output = '';
-    Object.keys(config).forEach((key) => {
+    Object.keys(config).forEach(key => {
       const value = config[key];
       output = output.concat(`\nexport ${key}=${value}`);
     });
@@ -28,10 +29,10 @@ export default class CI {
   }
 
   static async createEmptyConfig(bucket: string) {
-    await S3.putObjectAsync({
+    await S3.putObject({
       Bucket: bucket,
       Key: CI_CONFIG_KEY,
       Body: '{}'
-    });
+    }).promise();
   }
 }
