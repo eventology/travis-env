@@ -1,10 +1,10 @@
 {
-  "name": "travis-env",
+  "name": "@eventology/travis-env",
   "version": "0.0.13",
   "description": "A tool for provisioning secrets into travis build environments",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eventology/travis-env.git"
+    "url": "git+https://github.com/eventology/travis-env.git"
   },
   "scripts": {
     "lint": "eslint *.js",
@@ -45,5 +45,10 @@
     "@types/yargs": "^11.1.1",
     "eslint": "^5.3.0",
     "typescript": "^3.0.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/eventology/travis-env/issues"
+  },
+  "homepage": "https://github.com/eventology/travis-env#readme",
+  "main": "build/cmd.js"
 }
